@@ -19,15 +19,11 @@ jobs:
         with:
           python-version: "3.10.2"
 
-      - name: Get Current Commit Hash
-        id: get_commit_hash
-        run: echo "::set-output name=commit_hash::$(git rev-parse HEAD)"
-
       - name: Check for changes in Module A
         id: module_a_changed
         run: |
-          changed_files=$(git diff --name-only origin/master...${{ steps.get_commit_hash.outputs.commit_hash }} -- 'module_a/')
-          echo "::set-output name=changed::$(test -n "$changed_files" && echo 1 || echo 0)"
+          changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }})
+          echo "::set-output name=changed::$(echo $changed_files | grep -q '^module_a/' && echo 1 || echo 0)"
 
       - name: Linting Module A
         if: steps.module_a_changed.outputs.changed == '1'
