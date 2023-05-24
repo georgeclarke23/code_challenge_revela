@@ -40,7 +40,8 @@ jobs:
       - name: Check for changes in Module A
         id: module_a_changed
         run: |
-          echo "::set-output name=changed::$(git diff --name-only origin/main...${{ github.event.pull_request.head.sha }} | grep -c '^module_a/')"
+          changed_files=$(git diff --name-only origin/main "${{ github.event.pull_request.head.sha }}" -- 'module_a/')
+          echo "::set-output name=changed::$(test -n "$changed_files" && echo 1 || echo 0)"
 
       - name: Build and Test Module A
         if: steps.module_a_changed.outputs.changed == '1'
