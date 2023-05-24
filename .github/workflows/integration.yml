@@ -23,6 +23,7 @@ jobs:
         id: module_a_changed
         run: |
           changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }})
+          echo $changed_files
           echo "::set-output name=changed::$(echo $changed_files | grep -q '^module_a/' && echo 1 || echo 0)"
 
       - name: Linting Module A
