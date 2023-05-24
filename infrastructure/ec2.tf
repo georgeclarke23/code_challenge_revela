@@ -6,8 +6,6 @@ resource "aws_instance" "development_instance" {
   instance_type = var.instance_types["development"]
   count         = 1  # Number of instances to create
 
-  # Additional configuration for development instance (if needed)
-  # ...
 }
 
 resource "aws_instance" "training_instance" {

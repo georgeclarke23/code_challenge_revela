@@ -7,39 +7,37 @@ on:
       - synchronize
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build_and_test_module_a:
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.x
+          python-version: "3.10.2"
+
+      - name: Get Current Commit Hash
+        id: get_commit_hash
+        run: echo "::set-output name=commit_hash::$(git rev-parse HEAD)"
+
+      - name: Check for changes in Module A
+        id: module_a_changed
+        run: |
+          changed_files=$(git diff --name-only origin/master...${{ steps.get_commit_hash.outputs.commit_hash }} -- 'module_a/')
+          echo "::set-output name=changed::$(test -n "$changed_files" && echo 1 || echo 0)"
 
       - name: Linting Module A
-        if: ${{ contains(github.event.pull_request.changed_files, 'app/module_a/') }}
-        working-directory: app/module_a
-        run: |
-          make lint
-
-      - name: Linting Module B
-        if: ${{ contains(github.event.pull_request.changed_files, 'app/module_b/') }}
-        working-directory: app/module_b
-        run: |
-          make lint
-
-      - name: Linting Module C
-        if: ${{ contains(github.event.pull_request.changed_files, 'app/module_c/') }}
-        working-directory: app/module_c
+        if: steps.module_a_changed.outputs.changed == '1'
+        working-directory: module_a
         run: |
           make lint
 
       - name: Build and Test Module A
-        if: ${{ contains(github.event.pull_request.changed_files, 'app/module_a/') }}
-        working-directory: app/module_a
+        if: steps.module_a_changed.outputs.changed == '1'
+        working-directory: module_a
         run: |
           docker build \
             --cache-from=type=local,src=/tmp/.buildx-cache \
@@ -47,6 +45,25 @@ jobs:
             -t module_a:pull-request \
             .
           make test
+
+
+  build_and_test_module_b:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10.2"
+
+      - name: Linting Module B
+        if: ${{ contains(github.event.pull_request.changed_files, 'module_b/') }}
+        working-directory: module_b
+        run: |
+          make lint
 
       - name: Build and Test Module B
         if: ${{ contains(github.event.pull_request.changed_files, 'app/module_b/') }}
@@ -58,6 +75,25 @@ jobs:
             -t module_b:pull-request \
             .
           make test
+
+
+  build_and_test_module_c:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10.2"
+
+      - name: Linting Module C
+        if: ${{ contains(github.event.pull_request.changed_files, 'module_c/') }}
+        working-directory: module_c
+        run: |
+          make lint
 
       - name: Build and Test Module C
         if: ${{ contains(github.event.pull_request.changed_files, 'app/module_c/') }}
