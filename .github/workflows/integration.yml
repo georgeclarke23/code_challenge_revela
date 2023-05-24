@@ -22,7 +22,7 @@ jobs:
       - name: Check for changes in Module A
         id: module_a_changed
         run: |
-          changed_files=$(git diff --name-only origin/main...${{ github.event.pull_request.head.sha }} -- 'module_a/')
+          changed_files=$(git diff --name-only origin/master...${{ github.event.pull_request.head.sha }} -- 'module_a/')
           echo "::set-output name=changed::$(test -n "$changed_files" && echo 1 || echo 0)"
 
       - name: Linting Module A
