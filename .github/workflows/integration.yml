@@ -7,40 +7,40 @@ on:
       - synchronize
 
 jobs:
-build_and_test_module_a:
-  runs-on: ubuntu-20.04
+  build_and_test_module_a:
+    runs-on: ubuntu-20.04
 
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.10.2"
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10.2"
 
-    - name: Check for changes in Module A
-      id: module_a_changed
-      run: |
-        changed_files=$(git diff --name-only origin/main...${{ github.event.pull_request.head.sha }} -- 'module_a/')
-        echo "::set-output name=changed::$(test -n "$changed_files" && echo 1 || echo 0)"
+      - name: Check for changes in Module A
+        id: module_a_changed
+        run: |
+          changed_files=$(git diff --name-only origin/main...${{ github.event.pull_request.head.sha }} -- 'module_a/')
+          echo "::set-output name=changed::$(test -n "$changed_files" && echo 1 || echo 0)"
 
-    - name: Linting Module A
-      if: steps.module_a_changed.outputs.changed == '1'
-      working-directory: module_a
-      run: |
-        make lint
+      - name: Linting Module A
+        if: steps.module_a_changed.outputs.changed == '1'
+        working-directory: module_a
+        run: |
+          make lint
 
-    - name: Build and Test Module A
-      if: steps.module_a_changed.outputs.changed == '1'
-      working-directory: module_a
-      run: |
-        docker build \
-          --cache-from=type=local,src=/tmp/.buildx-cache \
-          --cache-to=type=local,dest=/tmp/.buildx-cache \
-          -t module_a:pull-request \
-          .
-        make test
+      - name: Build and Test Module A
+        if: steps.module_a_changed.outputs.changed == '1'
+        working-directory: module_a
+        run: |
+          docker build \
+            --cache-from=type=local,src=/tmp/.buildx-cache \
+            --cache-to=type=local,dest=/tmp/.buildx-cache \
+            -t module_a:pull-request \
+            .
+          make test
 
 
   build_and_test_module_b:
