@@ -22,9 +22,9 @@ jobs:
       - name: Check for changes in Module A
         id: module_a_changed
         run: |
-          changed_files=$(git diff --name-only origin/master ${{ github.event.after }})
-          echo $changed_files
-          echo "::set-output name=changed::$(echo $changed_files | grep -q '^module_a/' && echo 1 || echo 0)"
+          git fetch origin main
+          changed_files=$(git diff --name-only origin/main ${{ github.event.after }} -- 'module_a/')
+          echo "::set-output name=changed::$(test -n "$changed_files" && echo 1 || echo 0)"
 
       - name: Linting Module A
         if: steps.module_a_changed.outputs.changed == '1'
