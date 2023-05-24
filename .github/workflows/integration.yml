@@ -22,8 +22,8 @@ jobs:
       - name: Check for changes in Module A
         id: module_a_changed
         run: |
-          echo "=============== list modified files ==============="
-          git diff --name-only HEAD^ HEAD
+          git fetch origin master
+          changed_files=$(git diff --name-only origin/master...${{ steps.get_commit_hash.outputs.commit_hash }} -- 'module_a/')
           echo "::set-output name=changed::$(test -n "$changed_files" && echo 1 || echo 0)"
 
       - name: Linting Module A
