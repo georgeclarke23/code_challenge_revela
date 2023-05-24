@@ -1,0 +1,71 @@
+name: Integration Pipeline
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Linting Module A
+        if: ${{ steps.modified_files.outputs.module_a_changed == 'true' }}
+        working-directory: app/module_a
+        run: |
+          make lint
+
+      - name: Linting Module B
+        if: ${{ steps.modified_files.outputs.module_b_changed == 'true' }}
+        working-directory: app/module_b
+        run: |
+          make lint
+
+      - name: Linting Module C
+        if: ${{ steps.modified_files.outputs.module_c_changed == 'true' }}
+        working-directory: app/module_c
+        run: |
+          make lint
+
+      - name: Build and Test Module A
+        if: ${{ contains(github.event.pull_request.changed_files, 'module_a/') }}
+        working-directory: app/module_a
+        run: |
+          docker build \
+            --cache-from=type=local,src=/tmp/.buildx-cache \
+            --cache-to=type=local,dest=/tmp/.buildx-cache \
+            -t module_a:pull-request \
+            .
+          make test
+
+      - name: Build and Test Module B
+        if: ${{ contains(github.event.pull_request.changed_files, 'module_b/') }}
+        working-directory: app/module_b
+        run: |
+          docker build \
+            --cache-from=type=local,src=/tmp/.buildx-cache \
+            --cache-to=type=local,dest=/tmp/.buildx-cache \
+            -t module_b:pull-request \
+            .
+          make test
+
+      - name: Build and Test Module C
+        if: ${{ contains(github.event.pull_request.changed_files, 'module_c/') }}
+        working-directory: app/module_c
+        run: |
+          docker build \
+            --cache-from=type=local,src=/tmp/.buildx-cache \
+            --cache-to=type=local,dest=/tmp/.buildx-cache \
+            -t module_c:pull-request \
+            .
+          make test

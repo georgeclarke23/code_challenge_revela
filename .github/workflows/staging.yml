@@ -1,0 +1,41 @@
+name: Staging Workflow
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+  push:
+    branches:
+      - master
+
+jobs:
+  staging:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.10
+
+      - name: Deploy to module a to Staging
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        run: |
+          docker pull module_a:pull-request
+          echo "Deploying module a to staging"
+
+      - name: Deploy to module b to Staging
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        run: |
+          docker pull module_b:pull-request
+          echo "Deploying module b to staging"
+
+      - name: Deploy to module c to Staging
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        run: |
+          docker pull module_c:pull-request
+          echo "Deploying module c to staging"
