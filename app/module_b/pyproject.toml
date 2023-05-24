@@ -1,0 +1,63 @@
+[tool.poetry]
+name = "module-a"
+version = "0.1.0"
+description = "Fibonacci Sequence"
+authors = ["georgeclarke"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^4.0.1"
+mypy = "^0.991"
+isort = "^5.10.1"
+pytest = "^7.1.1"
+pytest-cov = "^3.0.0"
+black = "^22.3.0"
+pre-commit = "^2.18.1"
+
+
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs
+    | \.git
+    | \.mypy_cache
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+)
+'''
+
+[tool.isort]
+profile = "black"
+src_paths = ["src", "tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["hudi"]
+
+[tool.coverage.report]
+show_missing = true
+
+[tool.mypy]
+ignore_missing_imports = true
+allow_untyped_calls = true
+allow_untyped_defs = true
+allow_incomplete_defs = true
+implicit_optional = true
+pretty = true
