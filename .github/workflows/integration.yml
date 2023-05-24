@@ -37,8 +37,13 @@ jobs:
         run: |
           make lint
 
+      - name: Check for changes in Module A
+        id: module_a_changed
+        run: |
+          echo "::set-output name=changed::$(git diff --name-only origin/main...${{ github.event.pull_request.head.sha }} | grep -c '^module_a/')"
+
       - name: Build and Test Module A
-        if: ${{ contains(github.event.pull_request.changed_files, 'app/module_a/') }}
+        if: steps.module_a_changed.outputs.changed == '1'
         working-directory: app/module_a
         run: |
           docker build \
