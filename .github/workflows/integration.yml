@@ -38,9 +38,10 @@ jobs:
           done &lt; files.txt
 
   build_and_test_module_a:
+
+    runs-on: ubuntu-20.04
     needs: check
     if: needs.check.outputs.run_job == 'true'
-    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -50,42 +51,22 @@ jobs:
         with:
           python-version: "3.10.2"
 
-      - name: Check folder changes
-        id: folder-changes
-        run: |
-          git diff --name-only HEAD^ HEAD &gt; files.txt
-          while IFS= read -r file
-          do
-            echo $file
-            if [[ $file != module_a/* ]]; then
-              echo "This modified file is not under the 'db' folder."
-              echo "::set-output name=folder-changed::false"
-              break
-            else
-              echo "::set-output name=folder-changed::true"
-            fi
-          done &lt; files.txt
-
       - name: Installing dependencies
-        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_a
         run: |
           make setup
 
       - name: Linting Module A
-        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_a
         run: |
           make lint
 
       - name: Building docker image
-        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_a
         run: |
           docker build -t module_a:pull-request .
 
       - name: Test Module A
-        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_a
         run: |
           make test
@@ -103,37 +84,22 @@ jobs:
         with:
           python-version: "3.10.2"
 
-      - name: Check folder changes
-        id: folder-changes
-        run: |
-          if git diff --name-only HEAD^ HEAD | grep -q '^module_b/'; then
-            echo "true"
-            echo "::set-output name=folder-changed::true"
-          else
-            echo "false"
-            echo "::set-output name=folder-changed::false"
-          fi
-
       - name: Installing dependencies
-        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_b
         run: |
           make setup
 
       - name: Linting Module B
-        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_b
         run: |
           make lint
 
       - name: Build and Test Module B
-        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_b
         run: |
           docker build -t module_b:pull-request .
 
       - name: Test Module B
-        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_b
         run: |
           make test
@@ -152,43 +118,22 @@ jobs:
         with:
           python-version: "3.10.2"
 
-      - name: Check folder changes
-        id: folder-changes
-        run: |
-          git diff --name-only HEAD^ HEAD &gt; files.txt
-          while IFS= read -r file
-          do
-            echo $file
-            if [[ $file != module_c/* ]]; then
-              echo "This modified file is not under the 'db' folder."
-              echo "::set-output name=folder-changed::false"
-              break
-            else
-              echo "::set-output name=folder-changed::true"
-            fi
-          done &lt; files.txt
-          
-
       - name: Installing dependencies
-        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_c
         run: |
           make setup
 
       - name: Linting Module C
-        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_c
         run: |
           make lint
 
       - name: Build and Test Module C
-        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_c
         run: |
           docker build -t module_b:pull-request .
 
       - name: Test Module C
-        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_c
         run: |
           make test
