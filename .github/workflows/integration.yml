@@ -32,19 +32,22 @@ jobs:
             echo $file
             if [[ $file == module_a/* ]]; then
               echo "This modified file is under the 'module_a/' folder."
+              echo "True A"
               run_job_a="true"
             elif [[ $file == module_b/* ]]; then
               echo "This modified file is under the 'module_b/' folder."
+              echo "True B"
               run_job_b="true"
             elif [[ $file == module_c/* ]]; then
               echo "This modified file is under the 'module_c/' folder."
+              echo "True C"
               run_job_c="true"
             fi
           done
           
-          echo "::set-output name=run_job_a::$runjob_a"
-          echo "::set-output name=run_job_b::$runjob_b"
-          echo "::set-output name=run_job_c::$runjob_c"
+          echo "::set-output name=run_job_a::$run_job_a"
+          echo "::set-output name=run_job_b::$run_job_b"
+          echo "::set-output name=run_job_c::$run_job_c"
 
 
   build_and_test_module_a:
