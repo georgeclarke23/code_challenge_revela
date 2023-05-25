@@ -32,11 +32,7 @@ jobs:
       - name: Build and Test Module A
         working-directory: module_a
         run: |
-          docker build \
-            --cache-from=type=local,src=/tmp/.buildx-cache \
-            --cache-to=type=local,dest=/tmp/.buildx-cache \
-            -t module_a:pull-request \
-            .
+          docker build -t module_a:pull-request .
           make test
 
 
