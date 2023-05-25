@@ -9,7 +9,7 @@ tf/apply:
 	terraform -chdir=infrastructure apply -auto-approve tfplan
 
 tf/destroy:
-	terraform -chdir=infrastructure destroy -var-file=infrastructure/environments/$(ENV)/variables.tfvars -auto-approve
+	terraform -chdir=infrastructure destroy -var-file=infrastructure/environments/$(ENV)/variable.tfvars -auto-approve
 
 tf/fmt:
 	terraform -chdir=infrastructure fmt
