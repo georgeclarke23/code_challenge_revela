@@ -9,7 +9,7 @@ tf/apply:
 	terraform -chdir=infrastructure apply -auto-approve tfplan
 
 tf/destroy:
-	terraform -chdir=infrastructure destroy -var-file=infrastructure/environments/$(ENV)/variable.tfvars -auto-approve
+	terraform -chdir=infrastructure destroy -var-file=environments/$(ENV)/variable.tfvars -auto-approve
 
 tf/fmt:
 	terraform -chdir=infrastructure fmt
@@ -18,10 +18,10 @@ tf/fmt-check:
 	terraform -chdir=infrastructure fmt -check
 
 tf/init:
-	terraform -chdir=infrastructure init -backend-config=infrastructure/environments/$(ENV)/backend.tfvars
+	terraform -chdir=infrastructure init -backend-config=environments/$(ENV)/backend.tfvars
 
 tf/plan:
-	terraform -chdir=infrastructure plan -var-file=infrastructure/environments/$(ENV)/variable.tfvars -out=tfplan
+	terraform -chdir=infrastructure plan -var-file=environments/$(ENV)/variable.tfvars -out=tfplan
 
 tf/validate:
 	terraform -chdir=infrastructure validate
