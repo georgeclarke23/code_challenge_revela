@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          fetch-depth: 2
+          fetch-depth: 3
       - name: check modified files
         id: check_files
         run: |
@@ -24,28 +24,33 @@ jobs:
           git diff --name-only HEAD^ HEAD
           
           echo "========== check paths of modified files =========="
-          run_job="false"
+          runjob_a="false"
+          runjob_b="false"
+          runjob_c="false"
+          
           for file in $(git diff --name-only HEAD^ HEAD); do
             echo $file
             if [[ $file == module_a/* ]]; then
               echo "This modified file is under the 'module_a/' folder."
-              run_job="true"
-              break
+              runjob_a="true"
+            elif [[ $file == module_b/* ]]; then
+              echo "This modified file is under the 'module_b/' folder."
+              runjob_b="true"
+            elif [[ $file == module_c/* ]]; then
+              echo "This modified file is under the 'module_c/' folder."
+              runjob_c="true"
             fi
           done
           
-          if [[ $run_job == "true" ]]; then
-            echo "::set-output name=run_job::true"
-          else
-            echo "No modified files are under the 'module_a/' folder."
-            echo "::set-output name=run_job::false"
-          fi
+          echo "::set-output name=run_job_a::$runjob_a"
+          echo "::set-output name=run_job_b::$runjob_b"
+          echo "::set-output name=run_job_c::$runjob_c"
+
 
   build_and_test_module_a:
-
-    runs-on: ubuntu-20.04
     needs: check
-    if: needs.check.outputs.run_job == 'true'
+    if: needs.check.outputs.run_job_a == 'true'
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -76,6 +81,8 @@ jobs:
           make test
 
   build_and_test_module_b:
+    needs: check
+    if: needs.check.outputs.run_job_b == 'true'
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
@@ -110,6 +117,8 @@ jobs:
 
 
   build_and_test_module_c:
+    needs: check
+    if: needs.check.outputs.run_job_c == 'true'
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
