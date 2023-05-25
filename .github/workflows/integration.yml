@@ -45,9 +45,9 @@ jobs:
             fi
           done
           
-          echo "::set-output name=run_job_a::$run_job_a"
-          echo "::set-output name=run_job_b::$run_job_b"
-          echo "::set-output name=run_job_c::$run_job_c"
+          echo "run_job_a=$run_job_a" >> $GITHUB_STATE
+          echo "run_job_b=$run_job_b" >> $GITHUB_STATE
+          echo "run_job_c=$run_job_c" >> $GITHUB_STATE
 
 
   build_and_test_module_a:
