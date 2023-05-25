@@ -23,19 +23,16 @@ jobs:
       - name: Deploy to module a to Production
         if: github.ref == 'refs/heads/release' && github.event_name == 'push'
         run: |
-          docker pull module_a:pull-request
           echo "Deploying module a to Production"
 
       - name: Deploy to module b to Production
         if: github.ref == 'refs/heads/release' && github.event_name == 'push'
         run: |
-          docker pull module_b:pull-request
           echo "Deploying module b to Production"
 
       - name: Deploy to module c to Production
         if: github.ref == 'refs/heads/release' && github.event_name == 'push'
         run: |
-          docker pull module_c:pull-request
           echo "Deploying module c to Production"
 
   deploy-infrastructure:

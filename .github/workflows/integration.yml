@@ -81,6 +81,11 @@ jobs:
         run: |
           make test
 
+      - name: Deploy to Dev Module A
+        working-directory: module_a
+        run: |
+          echo "Deploying module a to staging from Cache"
+
   build_and_test_module_b:
     needs: check
     if: needs.check.outputs.run_job_b == 'true'
@@ -115,6 +120,11 @@ jobs:
         working-directory: module_b
         run: |
           make test
+
+      - name: Deploy to Dev Module B
+        working-directory: module_b
+        run: |
+          echo "Deploying module b to staging from Cache"
 
 
   build_and_test_module_c:
@@ -151,6 +161,11 @@ jobs:
         working-directory: module_c
         run: |
           make test
+
+      - name: Deploy to Dev Module C
+        working-directory: module_c
+        run: |
+          echo "Deploying module c to staging from Cache"
 
   deploy-infrastructure:
     runs-on: ubuntu-latest
