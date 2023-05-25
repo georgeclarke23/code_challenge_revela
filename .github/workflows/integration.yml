@@ -64,21 +64,25 @@ jobs:
           python-version: "3.10.2"
 
       - name: Installing dependencies
+        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_b
         run: |
           make setup
 
       - name: Linting Module B
+        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_b
         run: |
           make lint
 
       - name: Build and Test Module B
+        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_b
         run: |
           docker build -t module_b:pull-request .
 
       - name: Test Module B
+        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_b
         run: |
           make test
@@ -97,21 +101,25 @@ jobs:
           python-version: "3.10.2"
 
       - name: Installing dependencies
+        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_c
         run: |
           make setup
 
       - name: Linting Module C
+        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_c
         run: |
           make lint
 
       - name: Build and Test Module C
+        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_c
         run: |
           docker build -t module_b:pull-request .
 
       - name: Test Module C
+        if: steps.folder-changes.outputs.folder-changed == 'true'
         working-directory: module_c
         run: |
           make test
