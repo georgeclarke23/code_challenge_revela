@@ -44,7 +44,7 @@ jobs:
               run_job_c="true"
             fi
           done
-          
+          echo "run_job_a=$run_job_a"
           echo "run_job_a=$run_job_a" >> $GITHUB_STATE
           echo "run_job_b=$run_job_b" >> $GITHUB_STATE
           echo "run_job_c=$run_job_c" >> $GITHUB_STATE
