@@ -124,7 +124,7 @@ jobs:
         run: make tf/validate
 
       - name: Plan Terraform changes
-        run: make tf/plan
+        run: ls -la && make tf/plan
 
       - name: Apply Terraform changes
         if: github.event.action == 'opened' || github.event.action == 'synchronize'
