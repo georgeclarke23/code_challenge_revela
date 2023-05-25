@@ -1,27 +1,17 @@
+module "ec2_instances" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "4.3.0"
 
+  count = length(var.instance_types)
+  name  = var.instance_types[count.index]["name"]
 
-# Create EC2 instances
-resource "aws_instance" "development_instance" {
-  ami           = "ami-0123456789"  # Replace with the desired AMI ID for development
-  instance_type = var.instance_types["development"]
-  count         = 1  # Number of instances to create
+  ami                    = "ami-0c5204531f799e0c6"
+  instance_type          = var.instance_types[count.index]["instance_type"]
+  vpc_security_group_ids = [module.vpc.default_security_group_id]
+  subnet_id              = module.vpc.private_subnets[0]
 
-}
-
-resource "aws_instance" "training_instance" {
-  ami           = "ami-0123456789"  # Replace with the desired AMI ID for training
-  instance_type = var.instance_types["training"]
-  count         = 1  # Number of instances to create
-
-  # Additional configuration for training instance (if needed)
-  # ...
-}
-
-resource "aws_instance" "processing_instance" {
-  ami           = "ami-0123456789"  # Replace with the desired AMI ID for processing
-  instance_type = var.instance_types["processing"]
-  count         = 1  # Number of instances to create
-
-  # Additional configuration for processing instance (if needed)
-  # ...
+  tags = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
 }

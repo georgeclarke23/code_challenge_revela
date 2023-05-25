@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  staging:
+  deploying-code:
     runs-on: ubuntu-latest
 
     steps:
@@ -35,3 +35,26 @@ jobs:
         run: |
           docker pull module_c:pull-request
           echo "Deploying module c to staging"
+
+  deploy-infrastructure:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.0
+
+      - name: Terraform Init
+        run: make tf/init ENV=staging
+
+      - name: Terraform Plan
+        id: plan
+        run: make tf/plan ENV=staging
+
+      - name: Deploy to Staging
+        if: success() && github.ref == 'refs/heads/master'
+        run: make tf/apply ENV=staging
