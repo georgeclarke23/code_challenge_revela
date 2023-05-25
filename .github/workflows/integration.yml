@@ -25,16 +25,20 @@ jobs:
           make setup
 
       - name: Linting Module A
+        if: git diff --name-only ${{ github.base_ref }}...${{ github.head_ref }} | grep -q '^module_a/'
         working-directory: module_a
         run: |
           make lint
 
-      - name: Build and Test Module A
+      - name: Building docker image
         working-directory: module_a
         run: |
           docker build -t module_a:pull-request .
-          make test
 
+      - name: Test Module A
+        working-directory: module_a
+        run: |
+          make test
 
   build_and_test_module_b:
     runs-on: ubuntu-20.04
