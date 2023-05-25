@@ -24,8 +24,10 @@ jobs:
         id: folder-changes
         run: |
           if git diff --name-only HEAD^ HEAD | grep -q '^module_a/'; then
+            echo "true"
             echo "::set-output name=folder-changed::true"
           else
+            echo "false"
             echo "::set-output name=folder-changed::false"
           fi
 
@@ -67,9 +69,11 @@ jobs:
       - name: Check folder changes
         id: folder-changes
         run: |
-          if git diff --name-only ${{ github.base_ref }} -- ${{ github.head_ref }} | grep -q '^module_b/'; then
+          if git diff --name-only HEAD^ HEAD | grep -q '^module_b/'; then
+            echo "true"
             echo "::set-output name=folder-changed::true"
           else
+            echo "false"
             echo "::set-output name=folder-changed::false"
           fi
 
@@ -112,9 +116,11 @@ jobs:
       - name: Check folder changes
         id: folder-changes
         run: |
-          if git diff --name-only ${{ github.base_ref }} -- ${{ github.head_ref }} | grep -q '^module_c/'; then
+          if git diff --name-only HEAD^ HEAD | grep -q '^module_c/'; then
+            echo "true"
             echo "::set-output name=folder-changed::true"
           else
+            echo "false"
             echo "::set-output name=folder-changed::false"
           fi
 
