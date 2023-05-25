@@ -21,7 +21,7 @@ tf/init:
 	terraform -chdir=infrastructure init -backend-config=infrastructure/environments/$(ENV)/backend.tfvars
 
 tf/plan:
-	terraform -chdir=infrastructure plan -var-file=infrastructure/environments/$(ENV)/variables.tfvars -out=tfplan
+	terraform -chdir=infrastructure plan -var-file=infrastructure/environments/$(ENV)/variable.tfvars -out=tfplan
 
 tf/validate:
 	terraform -chdir=infrastructure validate
