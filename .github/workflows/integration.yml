@@ -24,21 +24,21 @@ jobs:
           git diff --name-only HEAD^ HEAD
           
           echo "========== check paths of modified files =========="
-          runjob_a="false"
-          runjob_b="false"
-          runjob_c="false"
+          run_job_a="false"
+          run_job_b="false"
+          run_job_c="false"
           
           for file in $(git diff --name-only HEAD^ HEAD); do
             echo $file
             if [[ $file == module_a/* ]]; then
               echo "This modified file is under the 'module_a/' folder."
-              runjob_a="true"
+              run_job_a="true"
             elif [[ $file == module_b/* ]]; then
               echo "This modified file is under the 'module_b/' folder."
-              runjob_b="true"
+              run_job_b="true"
             elif [[ $file == module_c/* ]]; then
               echo "This modified file is under the 'module_c/' folder."
-              runjob_c="true"
+              run_job_c="true"
             fi
           done
           
