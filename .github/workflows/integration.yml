@@ -9,14 +9,16 @@ on:
 jobs:
   check:
     name: Check files
-    outputs:
-      run_job: ${{ steps.check_files.outputs.run_job }}
     runs-on: ubuntu-latest
+    outputs:
+      run_job_a: ${{ steps.check_files.outputs.run_job_a }}
+      run_job_b: ${{ steps.check_files.outputs.run_job_b }}
+      run_job_c: ${{ steps.check_files.outputs.run_job_c }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          fetch-depth: 3
+          fetch-depth: 2
       - name: check modified files
         id: check_files
         run: |
@@ -32,28 +34,24 @@ jobs:
             echo $file
             if [[ $file == module_a/* ]]; then
               echo "This modified file is under the 'module_a/' folder."
-              echo "True A"
               run_job_a="true"
             elif [[ $file == module_b/* ]]; then
               echo "This modified file is under the 'module_b/' folder."
-              echo "True B"
               run_job_b="true"
             elif [[ $file == module_c/* ]]; then
               echo "This modified file is under the 'module_c/' folder."
-              echo "True C"
               run_job_c="true"
             fi
           done
-          echo "run_job_a=$run_job_a"
-          echo "run_job_a=$run_job_a" >> $GITHUB_STATE
-          echo "run_job_b=$run_job_b" >> $GITHUB_STATE
-          echo "run_job_c=$run_job_c" >> $GITHUB_STATE
 
+          echo "::set-output name=run_job_a::$run_job_a"
+          echo "::set-output name=run_job_b::$run_job_b"
+          echo "::set-output name=run_job_c::$run_job_c"
 
   build_and_test_module_a:
     needs: check
     if: needs.check.outputs.run_job_a == 'true'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
