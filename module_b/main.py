@@ -4,6 +4,7 @@ from src.factorial import factorial
 def main():
     print(factorial(n=10))
     print(factorial(n=10))
+    print(factorial(n=10))
 
 
 if __name__ == '__main__':
