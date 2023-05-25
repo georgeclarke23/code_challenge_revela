@@ -22,7 +22,7 @@ The configuration, written to work with AWS or GCP providers, details the setup 
 - A medium-sized instance equipped with GPUs for machine learning training
 - A large instance for handling large-scale data processing jobs
 
-The Terraform files for this task can be found under the `infrastructure` folder in the repository. Please note that this is a proof-of-concept and is not intended for direct deployment.
+The Terraform files for this task can be found under the `infrastructure` folder in the repository.
 
 Note: This project serves as a proof of concept and may include simple functions such as addition or Fibonacci sequences in each module for testing purposes.
 
