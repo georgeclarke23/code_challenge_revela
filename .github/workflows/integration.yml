@@ -23,14 +23,14 @@ jobs:
         id: check_files
         run: |
           echo "=============== list modified files ==============="
-          git diff --name-only HEAD^ HEAD
+          git diff --name-only --cached
           
           echo "========== check paths of modified files =========="
           run_job_a="false"
           run_job_b="false"
           run_job_c="false"
           
-          for file in $(git diff --name-only HEAD^ HEAD); do
+          for file in $(git diff --name-only --cached); do
             echo $file
             if [[ $file == module_a/* ]]; then
               echo "This modified file is under the 'module_a/' folder."
@@ -51,7 +51,7 @@ jobs:
   build_and_test_module_a:
     needs: check
     if: needs.check.outputs.run_job_a == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
