@@ -26,8 +26,7 @@ The Terraform files for this task can be found under the `infrastructure` folder
 
 Note: This project serves as a proof of concept and may include simple functions such as addition or Fibonacci sequences in each module for testing purposes.
 
-## Q3
-###  Key Communication Processes and Tools in Project Management
+### Task 3: Key Communication Processes and Tools in Project Management
 
 Building and maintaining a solid communication flow is fundamental to successful project management. Here's a quick overview of the key processes and tools we could use to ensure we stay on top of things:
 
