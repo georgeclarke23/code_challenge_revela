@@ -24,18 +24,22 @@ jobs:
           git diff --name-only HEAD^ HEAD
           
           echo "========== check paths of modified files =========="
-          git diff --name-only HEAD^ HEAD > files.txt
-          while IFS= read -r file
-          do
+          run_job="false"
+          for file in $(git diff --name-only HEAD^ HEAD); do
             echo $file
-            if [[ $file != module_a/* ]]; then
-              echo "This modified file is not under the 'module_a/' folder."
-              echo "::set-output name=run_job::false"
+            if [[ $file == module_a/* ]]; then
+              echo "This modified file is under the 'module_a/' folder."
+              run_job="true"
               break
-            else
-              echo "::set-output name=run_job::true"
             fi
-          done &lt; files.txt
+          done
+          
+          if [[ $run_job == "true" ]]; then
+            echo "::set-output name=run_job::true"
+          else
+            echo "No modified files are under the 'module_a/' folder."
+            echo "::set-output name=run_job::false"
+          fi
 
   build_and_test_module_a:
 
