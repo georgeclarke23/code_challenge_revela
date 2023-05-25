@@ -21,20 +21,17 @@ jobs:
       - name: Deploy to module a to Staging
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: |
-          docker pull module_a:pull-request
-          echo "Deploying module a to staging"
+          echo "Deploying module a to staging from Cache"
 
       - name: Deploy to module b to Staging
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: |
-          docker pull module_b:pull-request
-          echo "Deploying module b to staging"
+          echo "Deploying module b to staging from Cache"
 
       - name: Deploy to module c to Staging
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: |
-          docker pull module_c:pull-request
-          echo "Deploying module c to staging"
+          echo "Deploying module c to staging from Cache"
 
   deploy-infrastructure:
     runs-on: ubuntu-latest

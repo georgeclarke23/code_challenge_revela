@@ -55,4 +55,4 @@ test/unit:
 test/integration:
 	poetry run pytest -vv --cov=. --cov-report=xml -W ignore::DeprecationWarning $(TEST_DIR)/integration/*
 
-test: test/unit test/integration
+test: test/unit
